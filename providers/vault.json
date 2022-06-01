@@ -1,0 +1,9 @@
+{
+  "provider": {
+    "namespace": "hashicorp",
+    "name": "vault",
+    "versions": [
+      "3.6.0"
+    ]
+  }
+}

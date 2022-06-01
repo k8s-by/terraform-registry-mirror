@@ -1,0 +1,35 @@
+name: Update Terraform Providers
+on:
+  push:
+    branches:
+      - master
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Setup Terraform
+        uses: autero1/action-terraform@v0.1.0
+        with:
+          terraform_version: 1.2.1
+
+      - name: Setup jq
+        uses: sergeysova/jq-action@v2
+
+      - name: curl
+        uses: wei/curl@master
+
+    - name: Configure Git
+      run: |
+        git config user.name "$GITHUB_ACTOR"
+        git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
+
+    - name: Update Terraform Provider Versions
+      run: |
+          ls -la
+          bin/updater.sh providers/random.json
+          cat providers/random.json

@@ -1,0 +1,9 @@
+{
+  "provider": {
+    "namespace": "mrparkers",
+    "name": "keycloak",
+    "versions": [
+      "3.8.0"
+    ]
+  }
+}
