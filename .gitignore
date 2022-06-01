@@ -2,3 +2,6 @@
 
 !mirror/.gitkeep
 mirror/**
+
+**/.terraform
+**/*.lock.hcl

@@ -1,0 +1,9 @@
+{
+  "provider": {
+    "namespace": "hashicorp",
+    "name": "aws",
+    "versions": [
+  "4.4.0"
+]
+  }
+}

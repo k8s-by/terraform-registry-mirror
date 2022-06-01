@@ -1,8 +1,6 @@
 name: Update Terraform Providers
 on:
-  push:
-    branches:
-      - master
+  workflow_dispatch:
 jobs:
   release:
     runs-on: ubuntu-latest
@@ -12,24 +10,33 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Setup Terraform
-        uses: autero1/action-terraform@v0.1.0
-        with:
-          terraform_version: 1.2.1
+      - name: Configure Git
+        run: |
+          git config user.name "$GITHUB_ACTOR"
+          git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
 
-      - name: Setup jq
-        uses: sergeysova/jq-action@v2
+      - name: Update Terraform Provider Versions
+        run: |
+            ls -la
 
-      - name: curl
-        uses: wei/curl@master
+            bin/updater.sh providers/aws.json
+            bin/updater.sh providers/keycloak.json
+            bin/updater.sh providers/random.json
+            bin/updater.sh providers/vault.json
 
-    - name: Configure Git
-      run: |
-        git config user.name "$GITHUB_ACTOR"
-        git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
+            echo
+            cat providers/random.json
 
-    - name: Update Terraform Provider Versions
-      run: |
-          ls -la
-          bin/updater.sh providers/random.json
-          cat providers/random.json
+      - name: Push changes to repo
+        run: |
+          #!/bin/sh -e
+          MESSAGE="
+            Update provider versions
+          "
+          if ! git diff-index --quiet HEAD; then
+            git config --global user.name "${{ github.repository }}"
+            git config --global user.email "<action@github.com>"
+            git add .
+            git commit --allow-empty -m "${MESSAGE}"
+            git push origin master
+          fi
